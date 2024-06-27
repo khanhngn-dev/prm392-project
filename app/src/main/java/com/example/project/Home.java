@@ -8,9 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.project.adapter.ProductAdapter;
+import com.example.project.databinding.ActivityHomeBinding;
+import com.example.project.model.Product;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
 
 import utils.Auth;
 import utils.Navigate;
@@ -19,11 +25,17 @@ public class Home extends AppCompatActivity {
     MaterialButton logoutButton;
     TextView currentUserEmail;
 
+    ActivityHomeBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        initRecyclerView();
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -34,6 +46,17 @@ public class Home extends AppCompatActivity {
         logoutButton = findViewById(R.id.home_logout_button);
         currentUserEmail = findViewById(R.id.home_current_user);
 
+    }
+
+    private void initRecyclerView() {
+        ArrayList<Product> items = new ArrayList<>();
+        items.add(new Product("1", "Apple Watch SE","watch","Apple",349.99));
+        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung",249.99));
+        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit",0.0));
+        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung",0.0));
+
+        binding.prodcutView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        binding.prodcutView.setAdapter(new ProductAdapter(items));
     }
 
     @Override
