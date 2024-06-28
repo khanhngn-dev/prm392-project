@@ -1,4 +1,4 @@
-package utils.https.types;
+package com.example.project.model;
 
 import java.util.Date;
 import java.util.List;

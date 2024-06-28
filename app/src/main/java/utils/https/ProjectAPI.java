@@ -1,5 +1,10 @@
 package utils.https;
 
+import com.example.project.model.CartItem;
+import com.example.project.model.Order;
+import com.example.project.model.Product;
+import com.example.project.model.Store;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -10,10 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import utils.https.types.CartItem;
-import utils.https.types.Order;
-import utils.https.types.Product;
-import utils.https.types.Store;
 import utils.https.types.request.PreSignedRequest;
 import utils.https.types.request.ProductRequest;
 import utils.https.types.request.SignupRequest;
@@ -21,6 +22,12 @@ import utils.https.types.response.SignupResponse;
 
 public interface ProjectAPI {
     // Users
+    @GET("/users/products")
+    Call<ApiResponse<List<Product>>> products();
+
+    @GET("/users/products/{productId}")
+    Call<ApiResponse<Product>> getProduct(@Path("productId") int productId);
+
     @GET("/users/cart")
     Call<ApiResponse<List<CartItem>>> getProfile();
 

@@ -1,4 +1,4 @@
-package utils.https.types;
+package com.example.project.model;
 
 public class Store {
     private String name;

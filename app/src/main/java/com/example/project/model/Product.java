@@ -1,25 +1,30 @@
 package com.example.project.model;
 
 public class Product {
-    private String id;
+    private int id;
     private String name;
-    private String image;
     private String description;
-    private Double price;
+    private int price;
+    private int stock;
+    private String imageUrl;
 
-    public Product(String id, String name, String image, String description, Double price) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.description = description;
-        this.price = price;
+    public Product() {
     }
 
-    public String getId() {
+    public Product(int id, String name, String description, int price, int stock, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -31,14 +36,6 @@ public class Product {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -47,11 +44,27 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

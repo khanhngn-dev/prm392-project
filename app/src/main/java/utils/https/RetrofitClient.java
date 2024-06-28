@@ -36,6 +36,8 @@ public class RetrofitClient {
             if (task.isSuccessful()) {
                 String idToken = task.getResult().getToken();
 
+                Log.d("FirebaseAuth", "Got user id token: " + idToken);
+
                 Retrofit retrofit = getClient(idToken);
                 callback.apply(retrofit);
             } else {

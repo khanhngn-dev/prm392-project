@@ -2,8 +2,10 @@ package com.example.project;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,9 +19,15 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
 import utils.Auth;
 import utils.Navigate;
+import utils.https.ApiResponse;
+import utils.https.NonNullCallback;
+import utils.https.RetrofitClient;
 
 public class Home extends AppCompatActivity {
     MaterialButton logoutButton;
@@ -49,14 +57,32 @@ public class Home extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        ArrayList<Product> items = new ArrayList<>();
-        items.add(new Product("1", "Apple Watch SE","watch","Apple",349.99));
-        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung",249.99));
-        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit",0.0));
-        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung",0.0));
+        RetrofitClient.getAPIClient(api -> {
+            api.products().enqueue(new NonNullCallback<ApiResponse<List<Product>>>() {
+                @Override
+                public void onResponse(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Response<ApiResponse<List<Product>>> response) {
+                    // Get status code
+                    int statusCode = response.code();
 
-        binding.prodcutView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        binding.prodcutView.setAdapter(new ProductAdapter(items));
+                    if (statusCode == 200 && response.body() != null) {
+                        List<Product> products = response.body().getData();
+
+                        ArrayList<Product> items = new ArrayList<>(products);
+                        binding.prodcutView.setLayoutManager(new LinearLayoutManager(Home.this, LinearLayoutManager.HORIZONTAL, false));
+                        binding.prodcutView.setAdapter(new ProductAdapter(items));
+                    } else {
+                        Toast.makeText(Home.this, "Cant get products from server.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ApiResponse<List<Product>>> call, @NonNull Throwable t) {
+                    Toast.makeText(Home.this, "Cant get products from server.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            return null;
+        });
     }
 
     @Override
