@@ -98,6 +98,8 @@ public class Home extends AppCompatActivity {
         currentUserEmail.setText(currentUser.getEmail());
 
         logoutButton.setOnClickListener(v -> {
+            binding.prodcutView.setAdapter(null);
+            RetrofitClient.resetClient();
             Auth.signOut();
             Navigate.navigate(this, Login.class);
             finish();

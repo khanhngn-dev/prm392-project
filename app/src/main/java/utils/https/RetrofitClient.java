@@ -70,4 +70,8 @@ public class RetrofitClient {
         }
         return retrofit;
     }
+
+    public static void resetClient() {
+        retrofit = null;
+    }
 }
