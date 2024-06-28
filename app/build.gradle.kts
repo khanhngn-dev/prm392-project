@@ -27,6 +27,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -46,4 +49,7 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+
+    implementation("com.google.code.gson:gson:2.9.1")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
 }
