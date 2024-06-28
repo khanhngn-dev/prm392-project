@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.project.adapter.ProductAdapter;
 import com.example.project.databinding.ActivityHomeBinding;
@@ -40,6 +40,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+
+
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -68,7 +70,9 @@ public class Home extends AppCompatActivity {
                         List<Product> products = response.body().getData();
 
                         ArrayList<Product> items = new ArrayList<>(products);
-                        binding.prodcutView.setLayoutManager(new LinearLayoutManager(Home.this, LinearLayoutManager.HORIZONTAL, false));
+
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(Home.this, 2);
+                        binding.prodcutView.setLayoutManager(gridLayoutManager);
                         binding.prodcutView.setAdapter(new ProductAdapter(items));
                     } else {
                         Toast.makeText(Home.this, "Cant get products from server.", Toast.LENGTH_SHORT).show();

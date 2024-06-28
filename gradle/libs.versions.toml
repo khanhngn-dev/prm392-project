@@ -14,6 +14,8 @@ commonsCodec = "1.15"
 retrofit = "2.9.0"
 okhttp = "4.9.3"
 cardviewV7 = "28.0.0"
+lifecycleLivedataKtx = "2.8.2"
+lifecycleViewmodelKtx = "2.8.2"
 
 [libraries]
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -30,6 +32,8 @@ commonsCodec = { group = "commons-codec", name = "commons-codec", version.ref = 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 converterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
