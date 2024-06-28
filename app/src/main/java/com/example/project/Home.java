@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.project.adapter.ProductAdapter;
@@ -32,6 +33,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+
+
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -50,12 +53,13 @@ public class Home extends AppCompatActivity {
 
     private void initRecyclerView() {
         ArrayList<Product> items = new ArrayList<>();
-        items.add(new Product("1", "Apple Watch SE","watch","Apple",349.99));
-        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung",249.99));
-        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit",0.0));
-        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung",0.0));
+        items.add(new Product("1", "Apple Watch SE","watch","Apple", "Apple",349.99, 4.9));
+        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung", "Samsung",249.99, 4.9));
+        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit", "Amazfit",0.0, 4.9));
+        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung", "Samsung",0.0, 4.9));
 
-        binding.prodcutView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        binding.prodcutView.setLayoutManager(gridLayoutManager);
         binding.prodcutView.setAdapter(new ProductAdapter(items));
     }
 
