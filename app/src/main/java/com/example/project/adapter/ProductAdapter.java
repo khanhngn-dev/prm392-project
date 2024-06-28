@@ -62,4 +62,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
             super(binding.getRoot());
         }
     }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
