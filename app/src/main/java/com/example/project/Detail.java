@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide;
 import com.example.project.databinding.ActivityDetailBinding;
 import com.example.project.model.Product;
 
+import utils.NumberFormat;
+
 public class Detail extends AppCompatActivity {
 
     private ActivityDetailBinding binding;
@@ -42,7 +44,7 @@ public class Detail extends AppCompatActivity {
             binding.detailName.setText(object.getName());
             binding.detailRate.setText(object.getRate().toString());
             binding.detailDescription.setText(object.getDescription());
-            binding.buyBtn.setText("Add to cart |" + "VND" + object.getPrice());
+            binding.buyBtn.setText("Add to cart | " + NumberFormat.vndMoney(object.getPrice()));
         }
 
         binding.back.setOnClickListener(v -> finish());
