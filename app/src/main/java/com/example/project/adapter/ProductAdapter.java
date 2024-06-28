@@ -2,8 +2,8 @@ package com.example.project.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,14 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.project.Detail;
 import com.example.project.databinding.ViewholderPupListBinding;
 import com.example.project.model.Product;
-import com.example.project.model.ProductDescription;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import utils.https.types.response.ProductDescriptionResponse;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewholder> {
     ArrayList<Product> items;
@@ -44,20 +38,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.Viewholder holder, int position) {
         binding.name.setText(items.get(position).getName());
+        binding.type.setText(items.get(position).getDescription());
         binding.price.setText("VND" + items.get(position).getPrice());
-
-        String description = items.get(position).getDescription();
-        Map<String, String> map = new HashMap<>();
-        String[] pairs = new Gson().fromJson(description, String[].class);
-        for (String pair : pairs) {
-            String[] keyValue = pair.split(":");
-            map.put(keyValue[0], keyValue[1]);
-        }
-        String json = new Gson().toJson(map);
-        ProductDescriptionResponse productDescriptionResponse = new Gson().fromJson(json, ProductDescriptionResponse.class);
-        ProductDescription productDescription = productDescriptionResponse.toModel();
-
-        binding.type.setText(productDescription.getCpu() + " - " + productDescription.getRam());
 
         String imageUrl = items.get(position).getImageUrl();
         Glide.with(context).load(imageUrl).transform(new GranularRoundedCorners(30, 30, 0, 0)).into(binding.imageView);
@@ -76,7 +58,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {
-
         public Viewholder(ViewholderPupListBinding binding) {
             super(binding.getRoot());
         }

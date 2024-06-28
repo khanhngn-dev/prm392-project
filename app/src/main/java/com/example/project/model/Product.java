@@ -1,6 +1,12 @@
 package com.example.project.model;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import utils.https.types.response.ProductDescriptionResponse;
 
 public class Product implements Serializable {
     private int id;
@@ -44,7 +50,17 @@ public class Product implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = new Gson().fromJson(description, String[].class);
+        for (String pair : pairs) {
+            String[] keyValue = pair.split(":");
+            map.put(keyValue[0], keyValue[1]);
+        }
+        String json = new Gson().toJson(map);
+        ProductDescriptionResponse productDescriptionResponse = new Gson().fromJson(json, ProductDescriptionResponse.class);
+        ProductDescription productDescription = productDescriptionResponse.toModel();
+
+        return productDescription.getCpu() + " - " + productDescription.getRam();
     }
 
     public void setDescription(String description) {
