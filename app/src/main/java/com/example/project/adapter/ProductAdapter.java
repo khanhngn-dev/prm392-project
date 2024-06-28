@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.example.project.Detail;
 import com.example.project.databinding.ViewholderPupListBinding;
 import com.example.project.model.Product;
 
@@ -43,11 +44,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
         int drawableResourced = holder.itemView.getResources().getIdentifier(items.get(position).getImage(), "drawable", holder.itemView.getContext().getPackageName());
         Glide.with(context).load(drawableResourced).transform(new GranularRoundedCorners(30,30,0,0)).into(binding.imageView);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, Detail.class);
+            System.out.println(intent);
+            intent.putExtra("object", items.get(position));
+            context.startActivity(intent);
         });
     }
 
