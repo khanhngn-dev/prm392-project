@@ -1,49 +1,34 @@
 package com.example.project.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Product implements Serializable {
-    private String id;
-    private String name;
-    private String image;
+
+    private String title;
     private String description;
-    private String type;
-    private Double price;
-    private Double rate;
+    private ArrayList<String> picUrl;
+    private double price;
+    private double rating;
+    private int numberInCart;
 
+    public Product() {
+    }
 
-    public Product(String id, String name, String image, String description,String type, Double price, Double rate) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
+    public Product(String title, String description, ArrayList<String> picUrl, double price, double rating) {
+        this.title = title;
         this.description = description;
+        this.picUrl = picUrl;
         this.price = price;
-        this.type = type;
-        this.rate = rate;
+        this.rating = rating;
     }
 
-    public String getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -54,27 +39,35 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public ArrayList<String> getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(ArrayList<String> picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public Double getRate() {
-        return rate;
+    public double getRating() {
+        return rating;
     }
 
-    public void setRate(Double rate) {
-        this.rate = rate;
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
-    public String getType() {
-        return type;
+    public int getNumberInCart() {
+        return numberInCart;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setNumberInCart(int numberInCart) {
+        this.numberInCart = numberInCart;
     }
 }

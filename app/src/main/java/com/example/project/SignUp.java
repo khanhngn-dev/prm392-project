@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import utils.Auth;
 import utils.Navigate;
 
-public class SignUp extends AppCompatActivity {
+public class SignUp extends Base {
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     TextInputEditText confirmPasswordInput;

@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.project.Detail;
 import com.example.project.databinding.ViewholderPupListBinding;
 import com.example.project.model.Product;
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewholder> {
     ArrayList<Product> items;
     Context context;
-    ViewholderPupListBinding binding;
 
     public ProductAdapter(ArrayList<Product> items) {
         this.items = items;
@@ -30,19 +31,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
     @NonNull
     @Override
     public ProductAdapter.Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding=ViewholderPupListBinding.inflate(LayoutInflater.from(parent.getContext()),parent,false);
         context = parent.getContext();
+        ViewholderPupListBinding binding=ViewholderPupListBinding.inflate(LayoutInflater.from(context),parent,false);
         return new Viewholder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.Viewholder holder, int position) {
-        binding.name.setText(items.get(position).getName());
-        binding.type.setText(items.get(position).getDescription());
-        binding.price.setText("$" + items.get(position).getPrice());
+        holder.binding.name.setText(items.get(position).getTitle());
+        holder.binding.type.setText(items.get(position).getDescription());
+        holder.binding.price.setText("VND" + items.get(position).getPrice());
 
-        int drawableResourced = holder.itemView.getResources().getIdentifier(items.get(position).getImage(), "drawable", holder.itemView.getContext().getPackageName());
-        Glide.with(context).load(drawableResourced).transform(new GranularRoundedCorners(30,30,0,0)).into(binding.imageView);
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions=requestOptions.transform(new CenterCrop());
+
+        Glide.with(context).load(items.get(position).getPicUrl().get(0)).apply(requestOptions).into(holder.binding.imageView);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, Detail.class);
@@ -58,9 +61,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {
-
+        ViewholderPupListBinding binding;
         public Viewholder(ViewholderPupListBinding binding) {
             super(binding.getRoot());
+            this.binding=binding;
         }
     }
 }

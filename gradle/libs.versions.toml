@@ -13,6 +13,7 @@ firebaseAuth = "23.0.0"
 cardviewV7 = "28.0.0"
 lifecycleLivedataKtx = "2.8.2"
 lifecycleViewmodelKtx = "2.8.2"
+firebaseDatabase = "21.0.0"
 
 [libraries]
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -27,6 +28,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 cardview-v7 = { group = "com.android.support", name = "cardview-v7", version.ref = "cardviewV7" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
