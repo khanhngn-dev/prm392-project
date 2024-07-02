@@ -5,5 +5,7 @@
     <color name="dark">#100D25</color>
     <color name="gray">#9095A6</color>
     <color name="orange">#FFC8B7</color>
+    <color name="beige">#FFEFE1</color>
+    <color name="brown">#F0DEC5</color>
     <color name="purple">#5B41FF</color>
 </resources>

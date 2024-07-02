@@ -49,7 +49,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.Viewhold
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, Detail.class);
-            System.out.println(intent);
             intent.putExtra("object", items.get(position));
             context.startActivity(intent);
         });

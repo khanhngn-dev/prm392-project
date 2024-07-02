@@ -29,9 +29,8 @@ public class Detail extends AppCompatActivity {
         binding=ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        
-        getBundles();
         managementCart= new ManagmentCart(this);
+        getBundles();
         statusBarColor();
     }
 
@@ -41,11 +40,11 @@ public class Detail extends AppCompatActivity {
     }
     private void getBundles() {
         object= (Product) getIntent().getSerializableExtra("object");
-        System.out.println(object);
         binding.detailName.setText(object.getTitle());
         binding.detailRate.setText("" + object.getRating());
         binding.detailDescription.setText(object.getDescription());
         binding.buyBtn.setText("Add to cart | " + "$ " + object.getPrice());
+        Glide.with(this).load(object.getPicUrl().get(0)).into(binding.image);
 
         binding.buyBtn.setOnClickListener(v -> {
             object.setNumberInCart(numberOrder);
