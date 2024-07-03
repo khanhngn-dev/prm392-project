@@ -1,5 +1,6 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,7 @@ import utils.Navigate;
 
 public class Home extends Base {
     MaterialButton logoutButton;
+    MaterialButton cartButton;
     TextView currentUserEmail;
 
     private ActivityHomeBinding binding;
@@ -46,10 +48,14 @@ public class Home extends Base {
 
         initRecyclerView();
 
+
         // Initialize views
         logoutButton = findViewById(R.id.home_logout_button);
+        cartButton = findViewById(R.id.cart_btn);
         currentUserEmail = findViewById(R.id.home_current_user);
     }
+
+
 
     private void initRecyclerView() {
         DatabaseReference myRef = database.getReference("Items");
@@ -95,6 +101,10 @@ public class Home extends Base {
             Auth.signOut();
             Navigate.navigate(this, Login.class);
             finish();
+        });
+
+        cartButton.setOnClickListener(v -> {
+            Navigate.navigate(this, Cart.class);
         });
     }
 }

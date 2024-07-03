@@ -16,7 +16,7 @@ import com.example.project.databinding.ActivityDetailBinding;
 import com.example.project.helper.ManagmentCart;
 import com.example.project.model.Product;
 
-public class Detail extends AppCompatActivity {
+public class Detail extends Base {
 
     private ActivityDetailBinding binding;
     private Product object;
