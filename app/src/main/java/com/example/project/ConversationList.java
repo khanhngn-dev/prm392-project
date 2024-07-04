@@ -30,7 +30,7 @@ public class ConversationList extends AppCompatActivity {
     private final List<Conversation> conversations = new ArrayList<>();
 
     private SocketManager socketManager;
-    
+
     private ProgressBar progressBar;
     private RecyclerView conversationRecyclerView;
     private AppCompatImageView imageHome;
@@ -98,7 +98,7 @@ public class ConversationList extends AppCompatActivity {
             });
 
             return null;
-        });
+        }, this);
     }
 
     @SuppressLint("NotifyDataSetChanged")

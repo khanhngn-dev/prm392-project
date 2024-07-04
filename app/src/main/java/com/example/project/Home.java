@@ -9,10 +9,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.project.adapter.ProductAdapter;
 import com.example.project.databinding.ActivityHomeBinding;
+import com.example.project.manager.SocketManager;
 import com.example.project.model.Product;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import utils.Auth;
 import utils.Navigate;
+import utils.https.RetrofitClient;
 
 public class Home extends AppCompatActivity {
     MaterialButton logoutButton;
@@ -53,10 +54,10 @@ public class Home extends AppCompatActivity {
 
     private void initRecyclerView() {
         ArrayList<Product> items = new ArrayList<>();
-        items.add(new Product("1", "Apple Watch SE","watch","Apple", "Apple",349.99, 4.9));
-        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung", "Samsung",249.99, 4.9));
-        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit", "Amazfit",0.0, 4.9));
-        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung", "Samsung",0.0, 4.9));
+        items.add(new Product("1", "Apple Watch SE", "watch", "Apple", "Apple", 349.99, 4.9));
+        items.add(new Product("2", "Galaxy Watch 4", "watch", "Samsung", "Samsung", 249.99, 4.9));
+        items.add(new Product("3", "Amazfit GTS 2", "watch", "Amazfit", "Amazfit", 0.0, 4.9));
+        items.add(new Product("4", "Galaxy Watch 7", "watch", "Samsung", "Samsung", 0.0, 4.9));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         binding.prodcutView.setLayoutManager(gridLayoutManager);
@@ -77,6 +78,8 @@ public class Home extends AppCompatActivity {
 
         logoutButton.setOnClickListener(v -> {
             Auth.signOut();
+            RetrofitClient.resetClient();
+            SocketManager.resetClient();
             Navigate.navigate(this, Login.class);
             finish();
         });

@@ -1,6 +1,8 @@
 package com.example.project.manager;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.project.model.Conversation;
 import com.example.project.model.Message;
@@ -35,16 +37,24 @@ public class SocketManager {
         }
     }
 
-    public static synchronized void getInstance(Function<SocketManager, Void> callback) {
+    public static synchronized void getInstance(Function<SocketManager, Void> callback, Context context) {
         FirebaseUser user = Auth.currentUser();
         user.getIdToken(true).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String idToken = task.getResult().getToken();
+                if (idToken == null) {
+                    Log.e("FirebaseAuth", "Failed to get user id token");
+                    Toast.makeText(context, "Failed to get user id token", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                SocketManager socketManager = getInstance(idToken);
+                String uid = user.getUid();
+
+                SocketManager socketManager = getInstance(uid);
                 callback.apply(socketManager);
             } else {
                 Log.e("FirebaseAuth", "Failed to get user id token");
+                Toast.makeText(context, "Failed to get user id token", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -54,6 +64,10 @@ public class SocketManager {
             instance = new SocketManager(token);
         }
         return instance;
+    }
+
+    public static void resetClient() {
+        instance = null;
     }
 
     public void connect() {

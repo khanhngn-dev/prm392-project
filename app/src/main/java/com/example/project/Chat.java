@@ -166,7 +166,7 @@ public class Chat extends AppCompatActivity {
             });
 
             return null;
-        });
+        }, this);
     }
 
     private void listenForUserStatus(String userId) {
