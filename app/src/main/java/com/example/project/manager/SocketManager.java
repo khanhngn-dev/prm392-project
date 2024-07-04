@@ -19,16 +19,22 @@ import java.util.function.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import utils.Auth;
+import utils.Json;
 
 public class SocketManager {
     private static SocketManager instance;
     private Socket socket;
 
-    private SocketManager(String token) {
+    private SocketManager(String userId, String email) {
         try {
             IO.Options options = new IO.Options();
             Map<String, String> authorization = new HashMap<>();
-            authorization.put("authorization", "Bearer " + token);
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("userId", userId);
+            jsonObject.put("email", email);
+
+            authorization.put("authorization", Json.stringify(jsonObject));
 
             options.auth = authorization;
             socket = IO.socket("https://prm392.tripllery.com", options);
@@ -49,8 +55,9 @@ public class SocketManager {
                 }
 
                 String uid = user.getUid();
+                String email = user.getEmail();
 
-                SocketManager socketManager = getInstance(uid);
+                SocketManager socketManager = getInstance(uid, email);
                 callback.apply(socketManager);
             } else {
                 Log.e("FirebaseAuth", "Failed to get user id token");
@@ -59,9 +66,9 @@ public class SocketManager {
         });
     }
 
-    public static SocketManager getInstance(String token) {
+    public static SocketManager getInstance(String userId, String email) {
         if (instance == null) {
-            instance = new SocketManager(token);
+            instance = new SocketManager(userId, email);
         }
         return instance;
     }
