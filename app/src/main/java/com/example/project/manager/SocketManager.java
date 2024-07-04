@@ -19,7 +19,6 @@ import java.util.function.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import utils.Auth;
-import utils.Json;
 
 public class SocketManager {
     private static SocketManager instance;
@@ -34,7 +33,7 @@ public class SocketManager {
             jsonObject.put("userId", userId);
             jsonObject.put("email", email);
 
-            authorization.put("authorization", Json.stringify(jsonObject));
+            authorization.put("authorization", jsonObject.toString());
 
             options.auth = authorization;
             socket = IO.socket("https://prm392.tripllery.com", options);
