@@ -24,10 +24,16 @@ public class Cart extends Base {
         binding=ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setVariable();
-//        Comment 2 cai duoi no se hien
-        calculatorCart();
-        initCartList();
+        managementCart = new ManagmentCart(this);
+
+        if (managementCart != null) {
+            setVariable();
+            calculatorCart();
+            initCartList();
+        } else {
+            binding.emptyTxt.setText("Error initializing cart management.");
+            binding.emptyTxt.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initCartList() {
