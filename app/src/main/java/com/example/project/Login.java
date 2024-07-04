@@ -92,7 +92,7 @@ public class Login extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = Auth.currentUser();
         if (currentUser != null) {
-            Navigate.navigate(this, ConversationList.class);
+            Navigate.navigate(this, Home.class);
             finish();
         }
     }

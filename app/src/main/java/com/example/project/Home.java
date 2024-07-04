@@ -25,6 +25,7 @@ import utils.https.RetrofitClient;
 
 public class Home extends AppCompatActivity {
     MaterialButton logoutButton;
+    MaterialButton chatButton;
     TextView currentUserEmail;
 
     ActivityHomeBinding binding;
@@ -49,6 +50,7 @@ public class Home extends AppCompatActivity {
         // Initialize views
         logoutButton = findViewById(R.id.home_logout_button);
         currentUserEmail = findViewById(R.id.home_current_user);
+        chatButton = findViewById(R.id.home_chat_button);
 
     }
 
@@ -82,6 +84,10 @@ public class Home extends AppCompatActivity {
             SocketManager.resetClient();
             Navigate.navigate(this, Login.class);
             finish();
+        });
+
+        chatButton.setOnClickListener(v -> {
+            Navigate.navigate(this, ConversationList.class);
         });
     }
 }

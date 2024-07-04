@@ -11,4 +11,8 @@
     <string name="sign_up_subtitle">already have an account? login</string>
     <string name="home_welcome">laptop</string>
     <string name="logout">logout</string>
+    <string name="chat">chat</string>
+    <string name="input_message">Type a message.</string>
+    <string name="chat_availabilities">Online</string>
+    <string name="conversation_image">Conversation Image</string>
 </resources>
