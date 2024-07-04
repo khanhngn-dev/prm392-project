@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import utils.Auth;
 import utils.Navigate;
 
-public class Login extends AppCompatActivity {
+public class Login extends Base {
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     MaterialButton loginButton;

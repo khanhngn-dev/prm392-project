@@ -1,9 +1,13 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,52 +19,70 @@ import com.example.project.adapter.ProductAdapter;
 import com.example.project.databinding.ActivityHomeBinding;
 import com.example.project.model.Product;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.sql.DriverManager;
 import java.util.ArrayList;
 
 import utils.Auth;
 import utils.Navigate;
 
-public class Home extends AppCompatActivity {
+public class Home extends Base {
     MaterialButton logoutButton;
+    MaterialButton cartButton;
     TextView currentUserEmail;
 
-    ActivityHomeBinding binding;
+    private ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home);
-
-
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         initRecyclerView();
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
 
         // Initialize views
         logoutButton = findViewById(R.id.home_logout_button);
+        cartButton = findViewById(R.id.cart_btn);
         currentUserEmail = findViewById(R.id.home_current_user);
-
     }
 
-    private void initRecyclerView() {
-        ArrayList<Product> items = new ArrayList<>();
-        items.add(new Product("1", "Apple Watch SE","watch","Apple", "Apple",349.99, 4.9));
-        items.add(new Product("2", "Galaxy Watch 4","watch","Samsung", "Samsung",249.99, 4.9));
-        items.add(new Product("3", "Amazfit GTS 2","watch","Amazfit", "Amazfit",0.0, 4.9));
-        items.add(new Product("4", "Galaxy Watch 7","watch","Samsung", "Samsung",0.0, 4.9));
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        binding.prodcutView.setLayoutManager(gridLayoutManager);
-        binding.prodcutView.setAdapter(new ProductAdapter(items));
+
+    private void initRecyclerView() {
+        DatabaseReference myRef = database.getReference("Items");
+        binding.progressBar.setVisibility(View.VISIBLE);
+        ArrayList<Product> items = new ArrayList<>();
+        System.out.println(items);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(snapshot);
+                if(snapshot.exists()) {
+                    for(DataSnapshot issue : snapshot.getChildren()) {
+                        items.add(issue.getValue(Product.class));
+                    }
+                    if(!items.isEmpty()){
+                        binding.prodcutView.setLayoutManager(new GridLayoutManager(Home.this, 2));
+                        binding.prodcutView.setAdapter(new ProductAdapter(items));
+                    }
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -79,6 +101,10 @@ public class Home extends AppCompatActivity {
             Auth.signOut();
             Navigate.navigate(this, Login.class);
             finish();
+        });
+
+        cartButton.setOnClickListener(v -> {
+            Navigate.navigate(this, Cart.class);
         });
     }
 }
