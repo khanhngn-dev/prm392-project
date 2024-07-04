@@ -1,6 +1,8 @@
 package com.example.project;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ public class Login extends AppCompatActivity {
     TextInputEditText passwordInput;
     MaterialButton loginButton;
     TextView toSignUp;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +42,18 @@ public class Login extends AppCompatActivity {
         passwordInput = findViewById(R.id.login_password_input);
         loginButton = findViewById(R.id.login_button);
         toSignUp = findViewById(R.id.login_subtitle);
+        progressBar = findViewById(R.id.progressBar);
 
         // Set click listener for login button
         loginButton.setOnClickListener(v -> {
+            loading(true);
+
             String email = String.valueOf(emailInput.getText());
             String password = String.valueOf(passwordInput.getText());
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                loading(false);
                 return;
             }
 
@@ -58,6 +65,7 @@ public class Login extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            loading(false);
                         }
                     });
         });
@@ -67,6 +75,16 @@ public class Login extends AppCompatActivity {
             Navigate.navigate(this, SignUp.class);
             finish();
         });
+    }
+
+    private void loading(boolean isLoading) {
+        if (isLoading) {
+            loginButton.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
