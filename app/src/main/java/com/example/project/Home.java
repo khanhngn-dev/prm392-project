@@ -37,7 +37,7 @@ public class Home extends Base {
     MaterialButton logoutButton;
     MaterialButton cartButton;
     TextView currentUserEmail;
-
+    String email;
     private ActivityHomeBinding binding;
 
     @Override
@@ -96,6 +96,7 @@ public class Home extends Base {
         }
 
         currentUserEmail.setText(currentUser.getEmail());
+        email = currentUser.getEmail();
 
         logoutButton.setOnClickListener(v -> {
             Auth.signOut();
@@ -104,7 +105,9 @@ public class Home extends Base {
         });
 
         cartButton.setOnClickListener(v -> {
-            Navigate.navigate(this, Cart.class);
+            Intent intent = new Intent(Home.this, Cart.class);
+            intent.putExtra("user_email", email);
+            startActivity(intent);
         });
     }
 }
