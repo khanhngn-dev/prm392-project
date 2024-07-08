@@ -1,5 +1,7 @@
 package com.example.project;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -18,11 +20,18 @@ import com.example.project.helper.ManagmentCart;
 public class Cart extends Base {
     ActivityCartBinding binding;
     private ManagmentCart managementCart;
+    private String userEmail;
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if (getIntent() != null && getIntent().hasExtra("user_email")) {
+            userEmail = getIntent().getStringExtra("user_email");
+        }
 
         managementCart = new ManagmentCart(this);
 
@@ -34,6 +43,16 @@ public class Cart extends Base {
             binding.emptyTxt.setText("Error initializing cart management.");
             binding.emptyTxt.setVisibility(View.VISIBLE);
         }
+
+        binding.checkoutBtn.setOnClickListener(v -> {
+            double totalCost = calculatorCart();
+            Intent checkoutIntent = new Intent(Cart.this, Checkout.class);
+            checkoutIntent.putExtra("user_email", userEmail);
+            checkoutIntent.putExtra("total_cost", totalCost);
+            checkoutIntent.putExtra("product_list", managementCart.getListCart());
+
+            startActivity(checkoutIntent);
+        });
     }
 
     private void initCartList() {
@@ -46,20 +65,22 @@ public class Cart extends Base {
         }
 
         binding.cartView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
-        binding.cartView.setAdapter(new CartAdapter(managementCart.getListCart(), this, () -> calculatorCart()));
+        binding.cartView.setAdapter(new CartAdapter(managementCart.getListCart(), this, this::calculatorCart));
     }
 
     private void setVariable() {
         binding.backBtn.setOnClickListener(v -> finish());
     }
 
-    private void calculatorCart() {
+    @SuppressLint("SetTextI18n")
+    private double calculatorCart() {
         double shopping = 10;
-        double itemTotal = Math.round(managementCart.getTotalFee() * 100 ) / 100 ;
-        double total = Math.round((managementCart.getTotalFee() + shopping) * 100) / 100 ;
+        double itemTotal = (double) Math.round(managementCart.getTotalFee() * 100) / 100 ;
+        double total = (double) Math.round((managementCart.getTotalFee() + shopping) * 100) / 100 ;
 
         binding.subTotalTxt.setText("VND" + itemTotal);
         binding.shoppingTxt.setText("VND" + shopping);
         binding.totalTxt.setText("VND" + total);
+        return total;
     }
 }
