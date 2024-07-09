@@ -1,11 +1,12 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,17 +23,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import utils.Auth;
 import utils.Navigate;
 
-public class Home extends AppCompatActivity implements OnMapReadyCallback {
+public class Home extends Base implements OnMapReadyCallback {
     MaterialButton logoutButton;
+    MaterialButton cartButton;
     TextView currentUserEmail;
-
-    ActivityHomeBinding binding;
+    String email;
+    private ActivityHomeBinding binding;
     private GoogleMap mMap;
 
     @Override
@@ -53,19 +59,36 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
         // Initialize views
         logoutButton = findViewById(R.id.home_logout_button);
+        cartButton = findViewById(R.id.cart_btn);
         currentUserEmail = findViewById(R.id.home_current_user);
     }
 
     private void initRecyclerView() {
+        DatabaseReference myRef = database.getReference("Items");
+        binding.progressBar.setVisibility(View.VISIBLE);
         ArrayList<Product> items = new ArrayList<>();
-        items.add(new Product("1", "Apple Watch SE", "watch", "Apple", "Apple", 349.99, 4.9));
-        items.add(new Product("2", "Galaxy Watch 4", "watch", "Samsung", "Samsung", 249.99, 4.9));
-        items.add(new Product("3", "Amazfit GTS 2", "watch", "Amazfit", "Amazfit", 0.0, 4.9));
-        items.add(new Product("4", "Galaxy Watch 7", "watch", "Samsung", "Samsung", 0.0, 4.9));
+        System.out.println(items);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(snapshot);
+                if(snapshot.exists()) {
+                    for(DataSnapshot issue : snapshot.getChildren()) {
+                        items.add(issue.getValue(Product.class));
+                    }
+                    if(!items.isEmpty()){
+                        binding.prodcutView.setLayoutManager(new GridLayoutManager(Home.this, 2));
+                        binding.prodcutView.setAdapter(new ProductAdapter(items));
+                    }
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+            }
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        binding.prodcutView.setLayoutManager(gridLayoutManager);
-        binding.prodcutView.setAdapter(new ProductAdapter(items));
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void initMap() {
@@ -96,11 +119,23 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         }
 
         currentUserEmail.setText(currentUser.getEmail());
+        email = currentUser.getEmail();
 
         logoutButton.setOnClickListener(v -> {
             Auth.signOut();
             Navigate.navigate(this, Login.class);
             finish();
         });
+
+        cartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Cart.class);
+            intent.putExtra("user_email", email);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

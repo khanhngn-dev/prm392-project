@@ -13,6 +13,14 @@
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
         <activity
+            android:name=".Base"
+            android:exported="false" />
+        <activity
+            android:name=".Cart"
+            android:exported="false" />
+        <activity android:name=".Checkout"
+            android:exported="false"/>
+        <activity
             android:name=".Detail"
             android:exported="false" />
         <activity
@@ -36,5 +44,8 @@
             android:value="AIzaSyAP2jNPoZni7qWjcjlh0F1-m7Df619ASKs" />
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"
+        tools:ignore="ManifestOrder" />
 
 </manifest>

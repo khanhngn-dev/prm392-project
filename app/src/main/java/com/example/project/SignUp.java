@@ -6,11 +6,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import utils.Auth;
 import utils.Navigate;
 
-public class SignUp extends AppCompatActivity {
+public class SignUp extends Base {
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     TextInputEditText confirmPasswordInput;
@@ -84,6 +86,11 @@ public class SignUp extends AppCompatActivity {
             Navigate.navigate(this, Login.class);
             finish();
         });
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        
     }
 
     @Override
