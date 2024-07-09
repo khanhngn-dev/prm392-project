@@ -11,6 +11,16 @@
     <string name="sign_up_subtitle">already have an account? login</string>
     <string name="home_welcome">laptop</string>
     <string name="logout">logout</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="search_product">Search product</string>
+    <string name="checkout">Checkout</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="vnpay">VNPay</string>
+    <string name="vnd">VND~</string>
+    <string name="total_cost">Total Cost</string>
+    <string name="shopping">Shopping</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="payment">Payment</string>
     <string name="chat">chat</string>
     <string name="input_message">Type a message.</string>
     <string name="chat_availabilities">Online</string>

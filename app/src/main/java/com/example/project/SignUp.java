@@ -29,7 +29,7 @@ import utils.https.RetrofitClient;
 import utils.https.types.request.SignupRequest;
 import utils.https.types.response.SignupResponse;
 
-public class SignUp extends AppCompatActivity {
+public class SignUp extends Base {
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
     TextInputEditText confirmPasswordInput;
