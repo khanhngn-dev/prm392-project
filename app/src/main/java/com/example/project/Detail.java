@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.project.databinding.ActivityDetailBinding;
 import com.example.project.helper.ManagmentCart;
 import com.example.project.model.Product;
+import com.google.android.gms.maps.GoogleMap;
 
 public class Detail extends Base {
 
@@ -32,6 +34,11 @@ public class Detail extends Base {
         managementCart= new ManagmentCart(this);
         getBundles();
         statusBarColor();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
     }
 
     private void statusBarColor() {

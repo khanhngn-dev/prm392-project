@@ -21,4 +21,5 @@
     <string name="shopping">Shopping</string>
     <string name="subtotal">Subtotal</string>
     <string name="payment">Payment</string>
+    <string name="cart">cart</string>
 </resources>
