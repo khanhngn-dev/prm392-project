@@ -21,6 +21,7 @@
     <string name="shopping">Shopping</string>
     <string name="subtotal">Subtotal</string>
     <string name="payment">Payment</string>
+    <string name="cart">cart</string>
     <string name="chat">chat</string>
     <string name="input_message">Type a message.</string>
     <string name="chat_availabilities">Online</string>

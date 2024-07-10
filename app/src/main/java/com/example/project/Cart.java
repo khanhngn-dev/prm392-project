@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,6 +17,7 @@ import com.example.project.adapter.CartAdapter;
 import com.example.project.databinding.ActivityCartBinding;
 import com.example.project.helper.ChangeNumberItemsListener;
 import com.example.project.helper.ManagmentCart;
+import com.google.android.gms.maps.GoogleMap;
 
 public class Cart extends Base {
     ActivityCartBinding binding;
@@ -53,6 +55,11 @@ public class Cart extends Base {
 
             startActivity(checkoutIntent);
         });
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
     }
 
     private void initCartList() {
