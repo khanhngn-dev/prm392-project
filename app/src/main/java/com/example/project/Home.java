@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.project.adapter.ProductAdapter;
 import com.example.project.databinding.ActivityHomeBinding;
+import com.example.project.manager.SocketManager;
 import com.example.project.model.Product;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,10 +33,12 @@ import java.util.ArrayList;
 
 import utils.Auth;
 import utils.Navigate;
+import utils.https.RetrofitClient;
 
 public class Home extends Base implements OnMapReadyCallback {
     MaterialButton logoutButton;
     MaterialButton cartButton;
+    MaterialButton chatButton;
     TextView currentUserEmail;
     String email;
     private ActivityHomeBinding binding;
@@ -61,6 +64,8 @@ public class Home extends Base implements OnMapReadyCallback {
         logoutButton = findViewById(R.id.home_logout_button);
         cartButton = findViewById(R.id.cart_btn);
         currentUserEmail = findViewById(R.id.home_current_user);
+        chatButton = findViewById(R.id.home_chat_button);
+
     }
 
     private void initRecyclerView() {
@@ -123,6 +128,8 @@ public class Home extends Base implements OnMapReadyCallback {
 
         logoutButton.setOnClickListener(v -> {
             Auth.signOut();
+            RetrofitClient.resetClient();
+            SocketManager.resetClient();
             Navigate.navigate(this, Login.class);
             finish();
         });
@@ -131,6 +138,10 @@ public class Home extends Base implements OnMapReadyCallback {
             Intent intent = new Intent(Home.this, Cart.class);
             intent.putExtra("user_email", email);
             startActivity(intent);
+        });
+
+        chatButton.setOnClickListener(v -> {
+            Navigate.navigate(this, ConversationList.class);
         });
     }
 
