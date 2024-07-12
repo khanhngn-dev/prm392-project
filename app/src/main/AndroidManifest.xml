@@ -54,5 +54,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"
         tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
 </manifest>

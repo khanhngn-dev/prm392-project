@@ -1,11 +1,22 @@
 package com.example.project;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.project.adapter.CartAdapter;
@@ -17,6 +28,8 @@ public class Cart extends Base {
     ActivityCartBinding binding;
     private ManagmentCart managementCart;
     private String userEmail;
+
+    NotificationChannel channel;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -49,6 +62,8 @@ public class Cart extends Base {
 
             startActivity(checkoutIntent);
         });
+
+        createNotificationChannel();
     }
 
     @Override
@@ -67,6 +82,7 @@ public class Cart extends Base {
 
         binding.cartView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.cartView.setAdapter(new CartAdapter(managementCart.getListCart(), this, this::calculatorCart));
+        sendNotification(managementCart.getListCart().size());
     }
 
     private void setVariable() {
@@ -87,5 +103,40 @@ public class Cart extends Base {
         binding.shoppingTxt.setText("VND" + shopping);
         binding.totalTxt.setText("VND" + total);
         return total;
+    }
+
+    private void createNotificationChannel() {
+        if (ContextCompat.checkSelfPermission(
+                this, "android.permission.POST_NOTIFICATION") ==
+                PackageManager.PERMISSION_GRANTED) {
+            // You can use the API that requires the permission.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                channel = new NotificationChannel("cart", "Cart", NotificationManager.IMPORTANCE_DEFAULT);
+            }
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this, "android.permission.POST_NOTIFICATION")) {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected, and what
+            // features are disabled if it's declined. In this UI, include a
+            // "cancel" or "no thanks" button that lets the user continue
+            // using your app without granting the permission.
+            Toast.makeText(this, "Must enabled notification", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendNotification(int count) {
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Toast.makeText(this, "Notification is disabled", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "cart")
+                .setSmallIcon(R.drawable.baseline_shopping_cart_24)
+                .setContentTitle("Cart")
+                .setContentText(count == 0 ? "Your cart is empty" : "You have " + count + " items in your cart")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setChannelId("cart")
+                .setNumber(count);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.notify(1, builder.build());
     }
 }
