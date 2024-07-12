@@ -35,7 +35,7 @@
             android:layout_width="94dp"
             android:layout_height="51dp"
             android:layout_marginStart="53dp"
-            android:layout_marginEnd="28dp"
+            android:layout_marginEnd="10dp"
             android:layout_toStartOf="@+id/home_logout_button"
             android:layout_toEndOf="@+id/home_title"
             android:text="@string/cart" />
@@ -45,7 +45,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignBottom="@+id/home_title"
-            android:layout_marginStart="-10dp"
+            android:layout_marginStart="-25dp"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="2dp"
             android:layout_toEndOf="@+id/home_title"

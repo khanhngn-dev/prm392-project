@@ -46,7 +46,7 @@ public class Detail extends Base {
         binding.detailName.setText(object.getTitle());
         binding.detailRate.setText("" + object.getRating());
         binding.detailDescription.setText(object.getDescription());
-        binding.buyBtn.setText("Add to cart | " + "$ " + object.getPrice());
+        binding.buyBtn.setText("Add to cart | " + "VND " + object.getPrice());
         Glide.with(this).load(object.getPicUrl().get(0)).into(binding.image);
 
         binding.buyBtn.setOnClickListener(v -> {
