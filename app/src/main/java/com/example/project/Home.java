@@ -2,7 +2,10 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -42,6 +45,7 @@ public class Home extends Base implements OnMapReadyCallback {
     AppCompatImageView chatButton;
     TextView unreadMessage;
     TextView currentUserEmail;
+    EditText search;
     String email;
     private ActivityHomeBinding binding;
     private GoogleMap mMap;
@@ -76,11 +80,9 @@ public class Home extends Base implements OnMapReadyCallback {
         DatabaseReference myRef = database.getReference("Items");
         binding.progressBar.setVisibility(View.VISIBLE);
         ArrayList<Product> items = new ArrayList<>();
-        System.out.println(items);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot);
                 if (snapshot.exists()) {
                     for (DataSnapshot issue : snapshot.getChildren()) {
                         items.add(issue.getValue(Product.class));
@@ -96,6 +98,28 @@ public class Home extends Base implements OnMapReadyCallback {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+        
+        search = findViewById(R.id.searchProduct);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ArrayList<Product> filteredItems = new ArrayList<>();
+                for (Product item : items) {
+                    if (item.getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                        filteredItems.add(item);
+                    }
+                }
+                binding.prodcutView.setAdapter(new ProductAdapter(filteredItems));
             }
         });
     }
