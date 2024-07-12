@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Project</string>
-    <string name="login_title">login</string>
+    <string name="login_title">Login</string>
     <string name="email_input_hint">email@example.com</string>
     <string name="password_input_hint">super_secret</string>
-    <string name="login_button">login</string>
-    <string name="sign_in_with_google">sign in with google</string>
-    <string name="sign_up_title">sign up</string>
-    <string name="sign_up_button">sign up</string>
-    <string name="login_subtitle">don\'t have an account? register</string>
-    <string name="sign_up_subtitle">already have an account? login</string>
-    <string name="home_welcome">laptop</string>
-    <string name="logout">logout</string>
+    <string name="login_button">Login</string>
+    <string name="sign_in_with_google">Sign in with google</string>
+    <string name="sign_up_title">Sign up</string>
+    <string name="sign_up_button">Sign up</string>
+    <string name="login_subtitle">Don\'t have an account? Register</string>
+    <string name="sign_up_subtitle">Already have an account? Login</string>
+    <string name="home_welcome">Store</string>
+    <string name="logout">Logout</string>
     <string name="contact_information">Contact Information</string>
     <string name="search_product">Search product</string>
     <string name="checkout">Checkout</string>
@@ -21,8 +21,8 @@
     <string name="shopping">Shopping</string>
     <string name="subtotal">Subtotal</string>
     <string name="payment">Payment</string>
-    <string name="cart">cart</string>
-    <string name="chat">chat</string>
+    <string name="cart">Cart</string>
+    <string name="chat">Chat</string>
     <string name="input_message">Type a message.</string>
     <string name="chat_availabilities">Online</string>
     <string name="conversation_image">Conversation Image</string>

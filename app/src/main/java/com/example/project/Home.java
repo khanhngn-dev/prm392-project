@@ -2,11 +2,15 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,18 +35,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import io.socket.emitter.Emitter;
 import utils.Auth;
 import utils.Navigate;
-import utils.https.RetrofitClient;
 
 public class Home extends Base implements OnMapReadyCallback {
     MaterialButton logoutButton;
     MaterialButton cartButton;
-    MaterialButton chatButton;
+    AppCompatImageView chatButton;
+    TextView unreadMessage;
     TextView currentUserEmail;
+    EditText search;
     String email;
     private ActivityHomeBinding binding;
     private GoogleMap mMap;
+    Emitter.Listener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class Home extends Base implements OnMapReadyCallback {
 
         initRecyclerView();
         initMap();
+        initSocket();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -65,23 +73,21 @@ public class Home extends Base implements OnMapReadyCallback {
         cartButton = findViewById(R.id.cart_btn);
         currentUserEmail = findViewById(R.id.home_current_user);
         chatButton = findViewById(R.id.home_chat_button);
-
+        unreadMessage = findViewById(R.id.unread_message);
     }
 
     private void initRecyclerView() {
         DatabaseReference myRef = database.getReference("Items");
         binding.progressBar.setVisibility(View.VISIBLE);
         ArrayList<Product> items = new ArrayList<>();
-        System.out.println(items);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot);
-                if(snapshot.exists()) {
-                    for(DataSnapshot issue : snapshot.getChildren()) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue : snapshot.getChildren()) {
                         items.add(issue.getValue(Product.class));
                     }
-                    if(!items.isEmpty()){
+                    if (!items.isEmpty()) {
                         binding.prodcutView.setLayoutManager(new GridLayoutManager(Home.this, 2));
                         binding.prodcutView.setAdapter(new ProductAdapter(items));
                     }
@@ -94,6 +100,28 @@ public class Home extends Base implements OnMapReadyCallback {
 
             }
         });
+        
+        search = findViewById(R.id.searchProduct);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ArrayList<Product> filteredItems = new ArrayList<>();
+                for (Product item : items) {
+                    if (item.getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                        filteredItems.add(item);
+                    }
+                }
+                binding.prodcutView.setAdapter(new ProductAdapter(filteredItems));
+            }
+        });
     }
 
     private void initMap() {
@@ -101,6 +129,24 @@ public class Home extends Base implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+    }
+
+    private void initSocket() {
+        SocketManager.getInstance(socketManager -> {
+            this.socketManager = socketManager;
+            this.listener = socketManager.setOnUpdateUnreadMessagesListener((unreadMsg) -> {
+                runOnUiThread(() -> {
+                    if (unreadMsg > 0) {
+                        unreadMessage.setVisibility(View.VISIBLE);
+                        unreadMessage.setText(String.valueOf(unreadMsg));
+                    } else {
+                        unreadMessage.setVisibility(View.GONE);
+                    }
+                });
+            });
+
+            return null;
+        }, this);
     }
 
     @Override
@@ -128,7 +174,6 @@ public class Home extends Base implements OnMapReadyCallback {
 
         logoutButton.setOnClickListener(v -> {
             Auth.signOut();
-            RetrofitClient.resetClient();
             SocketManager.resetClient();
             Navigate.navigate(this, Login.class);
             finish();
@@ -138,15 +183,25 @@ public class Home extends Base implements OnMapReadyCallback {
             Intent intent = new Intent(Home.this, Cart.class);
             intent.putExtra("user_email", email);
             startActivity(intent);
+            finish();
         });
 
         chatButton.setOnClickListener(v -> {
             Navigate.navigate(this, ConversationList.class);
+            finish();
         });
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (socketManager != null) {
+            socketManager.offEventListener("update_unread", listener);
+        }
     }
 }

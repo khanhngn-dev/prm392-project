@@ -5,17 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.project.adapter.CartAdapter;
 import com.example.project.databinding.ActivityCartBinding;
-import com.example.project.helper.ChangeNumberItemsListener;
 import com.example.project.helper.ManagmentCart;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -28,7 +22,7 @@ public class Cart extends Base {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityCartBinding.inflate(getLayoutInflater());
+        binding = ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         if (getIntent() != null && getIntent().hasExtra("user_email")) {
@@ -63,7 +57,7 @@ public class Cart extends Base {
     }
 
     private void initCartList() {
-        if(managementCart.getListCart().isEmpty()){
+        if (managementCart.getListCart().isEmpty()) {
             binding.emptyTxt.setVisibility(View.VISIBLE);
             binding.scrollViewCart.setVisibility(View.GONE);
         } else {
@@ -71,19 +65,23 @@ public class Cart extends Base {
             binding.scrollViewCart.setVisibility(View.VISIBLE);
         }
 
-        binding.cartView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        binding.cartView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.cartView.setAdapter(new CartAdapter(managementCart.getListCart(), this, this::calculatorCart));
     }
 
     private void setVariable() {
-        binding.backBtn.setOnClickListener(v -> finish());
+        binding.backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Cart.this, Home.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     @SuppressLint("SetTextI18n")
     private double calculatorCart() {
         double shopping = 10;
-        double itemTotal = (double) Math.round(managementCart.getTotalFee() * 100) / 100 ;
-        double total = (double) Math.round((managementCart.getTotalFee() + shopping) * 100) / 100 ;
+        double itemTotal = (double) Math.round(managementCart.getTotalFee() * 100) / 100;
+        double total = (double) Math.round((managementCart.getTotalFee() + shopping) * 100) / 100;
 
         binding.subTotalTxt.setText("VND" + itemTotal);
         binding.shoppingTxt.setText("VND" + shopping);

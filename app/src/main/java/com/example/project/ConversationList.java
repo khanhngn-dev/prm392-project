@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 
 public class ConversationList extends AppCompatActivity {
-
     private ConversationAdapter conversationAdapter;
     private final List<Conversation> conversations = new ArrayList<>();
 
@@ -60,6 +59,7 @@ public class ConversationList extends AppCompatActivity {
 
     private void setupRecyclerView() {
         conversationAdapter = new ConversationAdapter(conversations, conversation -> {
+            socketManager.readMessages(conversation.getId());
             Intent intent = new Intent(this, Chat.class);
             intent.putExtra("conversationId", conversation.getId());
             intent.putExtra("conversationName", conversation.getName());
@@ -82,7 +82,6 @@ public class ConversationList extends AppCompatActivity {
     private void setupSocket() {
         SocketManager.getInstance(socketManager -> {
             this.socketManager = socketManager;
-            socketManager.connect();
             socketManager.getConversations();
             socketManager.setOnNewMessageListener((message) -> {
                 runOnUiThread(() -> updateConversation(message));
@@ -140,13 +139,5 @@ public class ConversationList extends AppCompatActivity {
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (socketManager != null) {
-            socketManager.disconnect();
-        }
     }
 }
