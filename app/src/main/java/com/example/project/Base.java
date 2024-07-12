@@ -35,7 +35,7 @@ public abstract class Base extends AppCompatActivity {
                     String senderId = message.getSenderId();
                     boolean isSender = userId.equals(senderId);
                     if (!isSender) {
-                        Toast.makeText(this, "Store message: " + message.getContent(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Message: " + message.getContent(), Toast.LENGTH_SHORT).show();
                     }
                 });
             });
