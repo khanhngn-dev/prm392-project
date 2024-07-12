@@ -143,9 +143,9 @@ public class Chat extends AppCompatActivity {
     private void setupSocket() {
         SocketManager.getInstance(socketManager -> {
             this.socketManager = socketManager;
-            socketManager.connect();
             socketManager.getMessages(conversationId);
             socketManager.setOnNewMessageListener((message) -> {
+                socketManager.readMessages(conversationId);
                 String cId = message.getConversationId();
                 String uid = Auth.currentUser().getUid();
                 boolean isSender = message.getSenderId().equals(uid);
@@ -224,13 +224,5 @@ public class Chat extends AppCompatActivity {
 
     private void scrollToLastMessage() {
         chatRecyclerView.scrollToPosition(messages.size() - 1);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (socketManager != null) {
-            socketManager.disconnect();
-        }
     }
 }

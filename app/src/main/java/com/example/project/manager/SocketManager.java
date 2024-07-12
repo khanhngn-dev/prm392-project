@@ -2,7 +2,6 @@ package com.example.project.manager;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.project.model.Conversation;
 import com.example.project.model.Message;
@@ -18,6 +17,7 @@ import java.util.function.Function;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import utils.Auth;
 
 public class SocketManager {
@@ -43,37 +43,32 @@ public class SocketManager {
     }
 
     public static synchronized void getInstance(Function<SocketManager, Void> callback, Context context) {
+        if (instance != null) {
+            callback.apply(instance);
+            return;
+        }
+
         FirebaseUser user = Auth.currentUser();
-        user.getIdToken(true).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String idToken = task.getResult().getToken();
-                if (idToken == null) {
-                    Log.e("FirebaseAuth", "Failed to get user id token");
-                    Toast.makeText(context, "Failed to get user id token", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if (user != null) {
+            String uid = user.getUid();
+            String email = user.getEmail();
 
-                String uid = user.getUid();
-                String email = user.getEmail();
-
-                SocketManager socketManager = getInstance(uid, email);
-                callback.apply(socketManager);
-            } else {
-                Log.e("FirebaseAuth", "Failed to get user id token");
-                Toast.makeText(context, "Failed to get user id token", Toast.LENGTH_SHORT).show();
-            }
-        });
+            SocketManager socketManager = getInstance(uid, email);
+            callback.apply(socketManager);
+        }
     }
 
     public static SocketManager getInstance(String userId, String email) {
-        if (instance == null) {
-            instance = new SocketManager(userId, email);
-        }
+        instance = new SocketManager(userId, email);
+
         return instance;
     }
 
     public static void resetClient() {
-        instance = null;
+        if (instance != null) {
+            instance.disconnect();
+            instance = null;
+        }
     }
 
     public void connect() {
@@ -108,8 +103,24 @@ public class SocketManager {
         socket.emit("get_messages", conversationId);
     }
 
+    public void readMessages(String conversationId) {
+        socket.emit("read_messages", conversationId);
+    }
+
+    public void getUnreads() {
+        socket.emit("get_unreads");
+    }
+
+    public void subscribeConversation(String conversationId) {
+        socket.emit("subscribe_conversation", conversationId);
+    }
+
     public interface OnNewMessageListener {
         void onNewMessage(Message message);
+    }
+
+    public interface OnUpdateUnreadMessagesListener {
+        void onUpdateUnreadMessages(int unreadMessages);
     }
 
     public interface OnGetConversationsListener {
@@ -124,14 +135,34 @@ public class SocketManager {
         void onGetMessages(Message[] messages);
     }
 
-    public void setOnNewMessageListener(final OnNewMessageListener listener) {
-        socket.on("new_message", args -> {
+    public Emitter.Listener setOnNewMessageListener(final OnNewMessageListener listener) {
+        Emitter.Listener fnListener = args -> {
             if (args[0] != null) {
                 Gson gson = new Gson();
                 Message message = gson.fromJson(args[0].toString(), Message.class);
                 listener.onNewMessage(message);
             }
-        });
+        };
+
+        socket.on("new_message", fnListener);
+
+        return fnListener;
+    }
+
+    public void offEventListener(String eventName, Emitter.Listener listener) {
+        socket.off(eventName, listener);
+    }
+
+    public Emitter.Listener setOnUpdateUnreadMessagesListener(final OnUpdateUnreadMessagesListener listener) {
+        Emitter.Listener fnListener = args -> {
+            if (args[0] != null) {
+                listener.onUpdateUnreadMessages((int) args[0]);
+            }
+        };
+
+        socket.on("update_unread", fnListener);
+
+        return fnListener;
     }
 
     public void setOnGetConversationsListener(final OnGetConversationsListener listener) {
@@ -150,7 +181,6 @@ public class SocketManager {
                 Gson gson = new Gson();
                 Conversation conversation = gson.fromJson(args[0].toString(), Conversation.class);
                 listener.onNewConversation(conversation);
-                socket.emit("subscribe_conversation", conversation.getId());
             }
         });
     }

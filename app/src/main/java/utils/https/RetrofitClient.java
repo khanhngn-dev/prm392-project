@@ -31,6 +31,11 @@ public class RetrofitClient {
     }
 
     private static synchronized void getClient(Function<Retrofit, Void> callback) {
+        if (retrofit != null) {
+            callback.apply(retrofit);
+            return;
+        }
+
         FirebaseUser user = Auth.currentUser();
         user.getIdToken(true).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -45,33 +50,27 @@ public class RetrofitClient {
     }
 
     private static Retrofit getClient(String idToken) {
-        if (retrofit == null) {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @NonNull
-                        @Override
-                        public Response intercept(@NonNull Chain chain) throws IOException {
-                            Request original = chain.request();
-                            Request.Builder requestBuilder = original.newBuilder()
-                                    .header("Authorization", "Bearer " + idToken)
-                                    .method(original.method(), original.body());
-                            Request request = requestBuilder.build();
-                            return chain.proceed(request);
-                        }
-                    })
-                    .build();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @NonNull
+                    @Override
+                    public Response intercept(@NonNull Chain chain) throws IOException {
+                        Request original = chain.request();
+                        Request.Builder requestBuilder = original.newBuilder()
+                                .header("Authorization", "Bearer " + idToken)
+                                .method(original.method(), original.body());
+                        Request request = requestBuilder.build();
+                        return chain.proceed(request);
+                    }
+                })
+                .build();
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-        }
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        
         return retrofit;
-    }
-
-    public static void resetClient() {
-        retrofit = null;
     }
 }

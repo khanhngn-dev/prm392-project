@@ -16,16 +16,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.project.databinding.ActivityCartBinding;
 import com.example.project.helper.ManagmentCart;
 import com.example.project.model.Order;
 import com.example.project.model.Product;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Checkout extends Base {
@@ -67,7 +64,7 @@ public class Checkout extends Base {
         findViewById(R.id.checkoutBtn).setOnClickListener(v -> {
             String phoneNumber = phoneEditText.getText().toString().trim();
             if (isPhoneNumberValid(phoneNumber)) {
-                Order order = new Order(UUID.randomUUID(), userEmail, productList ,phoneNumber, "success", totalCost);
+                Order order = new Order(UUID.randomUUID(), userEmail, productList, phoneNumber, "success", totalCost);
                 createOrderInFirebase(order);
                 showWebView();
                 assert productList != null;

@@ -1,16 +1,10 @@
 package com.example.project;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.project.databinding.ActivityDetailBinding;
@@ -24,14 +18,15 @@ public class Detail extends Base {
     private Product object;
     private int numberOrder = 1;
     private ManagmentCart managementCart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding=ActivityDetailBinding.inflate(getLayoutInflater());
+        binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        managementCart= new ManagmentCart(this);
+        managementCart = new ManagmentCart(this);
         getBundles();
         statusBarColor();
     }
@@ -42,11 +37,12 @@ public class Detail extends Base {
     }
 
     private void statusBarColor() {
-        Window window=Detail.this.getWindow();
+        Window window = Detail.this.getWindow();
         window.setStatusBarColor(ContextCompat.getColor(Detail.this, R.color.purple));
     }
+
     private void getBundles() {
-        object= (Product) getIntent().getSerializableExtra("object");
+        object = (Product) getIntent().getSerializableExtra("object");
         binding.detailName.setText(object.getTitle());
         binding.detailRate.setText("" + object.getRating());
         binding.detailDescription.setText(object.getDescription());
