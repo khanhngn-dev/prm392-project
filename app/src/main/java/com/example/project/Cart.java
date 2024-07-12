@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.project.adapter.CartAdapter;
 import com.example.project.databinding.ActivityCartBinding;
 import com.example.project.helper.ManagmentCart;
+import com.example.project.model.Product;
 import com.google.android.gms.maps.GoogleMap;
 
 public class Cart extends Base {
@@ -82,7 +83,11 @@ public class Cart extends Base {
 
         binding.cartView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.cartView.setAdapter(new CartAdapter(managementCart.getListCart(), this, this::calculatorCart));
-        sendNotification(managementCart.getListCart().size());
+        int count = 0;
+        for (Product item : managementCart.getListCart()) {
+            count += item.getNumberInCart();
+        }
+        sendNotification(count);
     }
 
     private void setVariable() {
@@ -133,7 +138,8 @@ public class Cart extends Base {
                 .setSmallIcon(R.drawable.baseline_shopping_cart_24)
                 .setContentTitle("Cart")
                 .setContentText(count == 0 ? "Your cart is empty" : "You have " + count + " items in your cart")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setChannelId("cart")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setChannelId("cart")
                 .setNumber(count);
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
